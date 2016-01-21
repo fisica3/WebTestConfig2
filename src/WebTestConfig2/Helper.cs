@@ -4,7 +4,12 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+/// <summary>
+/// Helper Class for retrieve AppSettings and Connection Strings using the new model of ASPNET CORE
+/// It helps to make transparent the usage of configuration values regardless if you are using 
+/// local JSON files or Azure handled values, if the value is stored in the configuration of the Azure Web App
+/// the corresponding value in the JSON file will be ignored
+/// </summary>
 namespace WebTestConfig2
 {
     public enum ConnPrefix
@@ -15,7 +20,7 @@ namespace WebTestConfig2
         Custom,
         Empty
     }
-
+    //Thanks to JaredPar from http://stackoverflow.com/questions/972307/can-you-loop-through-all-enum-values
     public static class EnumUtil
     {
         public static IEnumerable<T> GetValues<T>()
@@ -49,7 +54,13 @@ namespace WebTestConfig2
             return config[envKey] ?? config[localKey];
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="config">A previously setted up IConfiguratedRoot value</param>
+        /// <param name="key">The key to be retrieved, usually "DefaultConnection"</param>
+        /// <param name="prefix">The kind of Database to be retrieved, if Empty is used it will try all the possible combinations</param>
+        /// <returns></returns>
         public static string GetConnectionString(IConfigurationRoot config, string key, ConnPrefix prefix = ConnPrefix.Empty)
         {
             string localKey = "Data:" + key + ":ConnectionString";
